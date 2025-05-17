@@ -1,0 +1,103 @@
+# Here you can define all your datasets by using simple YAML syntax.
+#
+# Documentation for this file format can be found in "The Data Catalog"
+# Link: https://docs.kedro.org/en/stable/data/data_catalog.html
+
+
+_csv: &csv
+  type: pandas.CSVDataset
+  load_args:
+    sep: "|"
+    compression: 'zip'
+    encoding: "utf-8"
+    decimal: '.'
+    date_format: "%d/%m/%Y"
+    low_memory: False
+    parse_dates: True
+  metadata:
+    kedro-viz:
+      layer: raw
+
+# dvf data for each year
+raw-dvf-2024:
+  <<: *csv
+  filepath: https://www.data.gouv.fr/fr/datasets/r/5ffa8553-0e8f-4622-add9-5c0b593ca1f8
+
+raw-dvf-2023:
+  <<: *csv
+  filepath: https://www.data.gouv.fr/fr/datasets/r/bc213c7c-c4d4-4385-bf1f-719573d39e90
+
+raw-dvf-2022:
+  <<: *csv
+  filepath: https://www.data.gouv.fr/fr/datasets/r/b4f43708-c5a8-4f30-80dc-7adfa1265d74
+
+raw-dvf-2021:
+  <<: *csv
+  filepath: https://www.data.gouv.fr/fr/datasets/r/3942b268-04e7-4202-b96d-93b9ef6254d6
+
+raw-dvf-2020:
+  <<: *csv
+  filepath: https://www.data.gouv.fr/fr/datasets/r/0d16005c-f68e-487c-811b-0deddba0c3f1
+
+
+# intermediate series of datasets
+int-imported-dvf.{year}:
+  type: pandas.ParquetDataset
+  filepath: data/02_intermediate/01_imported/int-imported-dvf.{year}.parquet
+  metadata:
+    kedro-viz:
+      layer: intermediate
+
+int-reduced-dvf.{year}:
+  type: pandas.ParquetDataset
+  filepath: data/02_intermediate/02_reduced/int-reduced-dvf.{year}.parquet
+  metadata:
+    kedro-viz:
+      layer: intermediate
+
+int-filtered-dvf.{year}:
+  type: pandas.ParquetDataset
+  filepath: data/02_intermediate/03_filtered/int-filtered-dvf.{year}.parquet
+  metadata:
+    kedro-viz:
+      layer: intermediate
+
+int-stacked-dvf:
+  type: pandas.ParquetDataset
+  filepath: data/02_intermediate/04_stacked/int-stacked-dvf.parquet
+  metadata:
+    kedro-viz:
+      layer: intermediate
+
+int-aggregated-houses-dvf:
+  type: pandas.ParquetDataset
+  filepath: data/02_intermediate/05_aggregated/int-aggregated-houses-dvf.parquet
+  metadata:
+    kedro-viz:
+      layer: intermediate
+      
+int-aggregated-flats-dvf:
+  type: pandas.ParquetDataset
+  filepath: data/02_intermediate/05_aggregated/int-aggregated-flats-dvf.parquet
+  metadata:
+    kedro-viz:
+      layer: intermediate
+
+
+
+
+
+
+
+
+# partitioned dataset
+int-preprocessed-dvf:
+  type: partitions.PartitionedDataset
+  path: data/02_intermediate/preprocessed/
+  dataset:
+    type: pandas.ParquetDataset
+  filename_suffix: ".parquet"
+  save_lazily: True
+  metadata:
+    kedro-viz:
+      layer: intermediate
