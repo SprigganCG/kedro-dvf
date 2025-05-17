@@ -14,8 +14,7 @@ def import_raw_data(raw_dvf_df):
     raw_dvf_df.columns = raw_dvf_df.columns.str.lower().str.replace(" ", "_").str.replace("-", "_")
 
     # coerce to string
-    column_list = ['code_commune',
-                   'code_departement',
+    column_list = ['code_departement',
                    'code_voie',
                    'no_volume',
                    '1er_lot',
@@ -58,6 +57,7 @@ def reduce_dimensions(dvf_df:pd.DataFrame)->pd.DataFrame:
         'b/t/q',
         'type_de_voie',
         'code_voie',
+        'code_commune',
         'prefixe_de_section',
         'no_plan',
         'no_volume',
@@ -104,8 +104,61 @@ def filter_entries(dvf_df):
     # convert date_mutation in format "03/12/2024" to to datetime format
     dvf_df['date_mutation'] = pd.to_datetime(dvf_df['date_mutation'], format='%d/%m/%Y')
 
-    
+    # extract the year from the date_mutation column
+    dvf_df['year'] = dvf_df['date_mutation'].dt.year
+
+    # drop nature_mutation column as it's now useless
+    dvf_df = dvf_df.drop(columns=['nature_mutation'])
 
     
     return dvf_df
     
+def stack_dvf(*dvf_dfs):
+    """Stack an arbitrary number of dvf dataframes"""
+    dvf_df = pd.concat(dvf_dfs, axis=0)
+    dvf_df = dvf_df.reset_index(drop=True)
+    
+    return dvf_df
+
+
+def aggregate_data(dvf_df:pd.DataFrame)->pd.DataFrame:
+    """Aggregate the data by year and by commume and compute for each year
+    the main statistical indicators for a whisker plot
+    do this computation for houses and apartments
+
+    median,quantiles,mean,std,min,max
+    """
+    # for houses 
+    dvf_houses_df = dvf_df[dvf_df['type_local'] == 'Maison']
+    dvf_flats_df = dvf_df[dvf_df['type_local'] == 'Appartement']
+
+    # group by year and commune and compute the count,mean,std + 5 numbers summary
+    dvf_agg_houses_df = dvf_houses_df.groupby(['year', 'commune','code_postal','code_departement']).agg(
+        mean=('valeur_fonciere', 'mean'),
+        std=('valeur_fonciere', 'std'),
+        min=('valeur_fonciere', 'min'),
+        q1=('valeur_fonciere', lambda x: np.quantile(x, 0.25)),
+        median=('valeur_fonciere', lambda x: np.quantile(x, 0.5)),
+        q3=('valeur_fonciere', lambda x: np.quantile(x, 0.75)),
+        max=('valeur_fonciere', 'max'),
+        count=('valeur_fonciere', 'count')
+    ).reset_index()
+
+    dvf_agg_houses_df['interqrt_range'] = dvf_agg_houses_df['q3'] - dvf_agg_houses_df['q1']
+
+
+    # group by year and commune and compute the main statistical indicators and count
+    dvf_agg_flats_df = dvf_flats_df.groupby(['year', 'commune','code_postal','code_departement']).agg(
+        mean=('valeur_fonciere', 'mean'),
+        std=('valeur_fonciere', 'std'),
+        min=('valeur_fonciere', 'min'),
+        q1=('valeur_fonciere', lambda x: np.quantile(x, 0.25)),
+        median=('valeur_fonciere', lambda x: np.quantile(x, 0.5)),
+        q3=('valeur_fonciere', lambda x: np.quantile(x, 0.75)),
+        max=('valeur_fonciere', 'max'),
+        count=('valeur_fonciere', 'count')
+    ).reset_index()
+
+    dvf_agg_flats_df['interqrt_range'] = dvf_agg_flats_df['q3'] - dvf_agg_flats_df['q1']
+
+    return dvf_agg_houses_df,dvf_agg_flats_df

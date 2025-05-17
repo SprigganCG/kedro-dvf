@@ -27,28 +27,67 @@ raw-dvf-2023:
   <<: *csv
   filepath: https://www.data.gouv.fr/fr/datasets/r/bc213c7c-c4d4-4385-bf1f-719573d39e90
 
+raw-dvf-2022:
+  <<: *csv
+  filepath: https://www.data.gouv.fr/fr/datasets/r/b4f43708-c5a8-4f30-80dc-7adfa1265d74
+
+raw-dvf-2021:
+  <<: *csv
+  filepath: https://www.data.gouv.fr/fr/datasets/r/3942b268-04e7-4202-b96d-93b9ef6254d6
+
+raw-dvf-2020:
+  <<: *csv
+  filepath: https://www.data.gouv.fr/fr/datasets/r/0d16005c-f68e-487c-811b-0deddba0c3f1
+
 
 # intermediate series of datasets
 int-imported-dvf.{year}:
   type: pandas.ParquetDataset
-  filepath: data/02_intermediate/imported/int-imported-dvf.{year}.parquet
+  filepath: data/02_intermediate/01_imported/int-imported-dvf.{year}.parquet
   metadata:
     kedro-viz:
       layer: intermediate
 
 int-reduced-dvf.{year}:
   type: pandas.ParquetDataset
-  filepath: data/02_intermediate/reduced/int-reduced-dvf.{year}.parquet
+  filepath: data/02_intermediate/02_reduced/int-reduced-dvf.{year}.parquet
   metadata:
     kedro-viz:
       layer: intermediate
 
 int-filtered-dvf.{year}:
   type: pandas.ParquetDataset
-  filepath: data/02_intermediate/filtered/int-filtered-dvf.{year}.parquet
+  filepath: data/02_intermediate/03_filtered/int-filtered-dvf.{year}.parquet
   metadata:
     kedro-viz:
       layer: intermediate
+
+int-stacked-dvf:
+  type: pandas.ParquetDataset
+  filepath: data/02_intermediate/04_stacked/int-stacked-dvf.parquet
+  metadata:
+    kedro-viz:
+      layer: intermediate
+
+int-aggregated-houses-dvf:
+  type: pandas.ParquetDataset
+  filepath: data/02_intermediate/05_aggregated/int-aggregated-houses-dvf.parquet
+  metadata:
+    kedro-viz:
+      layer: intermediate
+      
+int-aggregated-flats-dvf:
+  type: pandas.ParquetDataset
+  filepath: data/02_intermediate/05_aggregated/int-aggregated-flats-dvf.parquet
+  metadata:
+    kedro-viz:
+      layer: intermediate
+
+
+
+
+
+
 
 
 # partitioned dataset
