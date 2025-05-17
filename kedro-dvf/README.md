@@ -4,53 +4,47 @@
 
 ## Overview
 
-This is your new Kedro project, which was generated using `kedro 0.19.12`.
+Ce code lance un pipeline python qui charge et prépare automatiquement les données de valeur foncieres françaises publiées en open data couvrant la période 2020-2024. Ce pipeline génère en sortie les valeurs medianes des ventes pour chaque commune, pour chaque année.(un fichier pour les maisons, un second pour les appartements)
 
-Take a look at the [Kedro documentation](https://docs.kedro.org) to get started.
 
-## Rules and guidelines
+## How to run this pipeline locally
 
-In order to get the best out of the template:
+This repo contains a kedro pipeline named 'data_processing'. Just run kedro and the code will download the data, process them and generate the output in the data folder.
 
-* Don't remove any lines from the `.gitignore` file we provide
-* Make sure your results can be reproduced by following a data engineering convention
-* Don't commit data to your repository
-* Don't commit any credentials or your local configuration to your repository. Keep all your credentials and local configuration in `conf/local/`
+Your computer must have enough disk space (data will be loaded into data folder), and enough ram to process.
 
-## How to install dependencies
+From terminal
 
-Declare any dependencies in `requirements.txt` for `pip` installation.
+- Clone this repository
 
-To install them, run:
+```
+git clone https://github.com/SprigganCG/kedro-dvf.git
+cd kedro-dvf
+```
 
+- Setup a virtualenv
+```
+python -m venv .venv
+```
+
+- install requirements
 ```
 pip install -r requirements.txt
 ```
 
-## How to run your Kedro pipeline
+- test the installation
 
-You can run your Kedro project with:
+
+```
+kedro info
+```
+
+
+- You can run your Kedro project with:
 
 ```
 kedro run
 ```
-
-## How to test your Kedro project
-
-Have a look at the file `src/tests/test_run.py` for instructions on how to write your tests. You can run your tests as follows:
-
-```
-pytest
-```
-
-You can configure the coverage threshold in your project's `pyproject.toml` file under the `[tool.coverage.report]` section.
-
-
-## Project dependencies
-
-To see and update the dependency requirements for your project use `requirements.txt`. You can install the project requirements with `pip install -r requirements.txt`.
-
-[Further information about project dependencies](https://docs.kedro.org/en/stable/kedro_project_setup/dependencies.html#project-specific-dependencies)
 
 ## How to work with Kedro and notebooks
 
@@ -95,7 +89,3 @@ kedro ipython
 To automatically strip out all output cell contents before committing to `git`, you can use tools like [`nbstripout`](https://github.com/kynan/nbstripout). For example, you can add a hook in `.git/config` with `nbstripout --install`. This will run `nbstripout` before anything is committed to `git`.
 
 > *Note:* Your output cells will be retained locally.
-
-## Package your Kedro project
-
-[Further information about building project documentation and packaging your project](https://docs.kedro.org/en/stable/tutorial/package_a_project.html)
