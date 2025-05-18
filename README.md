@@ -11,7 +11,7 @@ Ce code lance un pipeline python qui charge et prépare automatiquement les donn
 
 This repo contains a kedro pipeline named 'data_processing'. Just run kedro and the code will download the data, process them and generate the output in the data folder of your computer.
 
-Your computer must have enough disk space (data will be loaded into data folder), and enough ram to process.
+Your computer must have enough disk space (data will be loaded into data folder), and enough ram to process.(tested only on a 16gb ram machine)
 
 From terminal
 
