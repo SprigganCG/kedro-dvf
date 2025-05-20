@@ -1,0 +1,53 @@
+name: Build and Release Aggregated Dataset
+
+on:
+  workflow_dispatch:  # Manual trigger; change to `push` or `schedule` if needed
+
+jobs:
+  build-dataset:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.10'
+
+      - name: Install dependencies and Kedro
+        run: |
+          cd kedro-dvf
+          python -m venv .venv
+          source .venv/bin/activate
+          pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: Run Kedro pipeline
+        run: |
+          cd kedro-dvf
+          source .venv/bin/activate
+          kedro run
+
+      - name: Copy dataset files to a release folder
+        run: |
+          mkdir -p release
+          cp kedro-dvf/data/02_intermediate/05_aggregated/int-aggregated-*-dvf.parquet release/
+
+      - name: Upload as artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: dvf-aggregated-datasets
+          path: release/
+
+      - name: Create GitHub Release (optional)
+        uses: softprops/action-gh-release@v2
+        with:
+          name: "Aggregated Dataset - ${{ github.run_number }}"
+          tag_name: "dvf-data-${{ github.run_number }}"
+          files: |
+            release/int-aggregated-houses-dvf.parquet
+            release/int-aggregated-flats-dvf.parquet
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
