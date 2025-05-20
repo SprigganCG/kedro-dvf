@@ -1,7 +1,8 @@
 name: Build and Release Aggregated Dataset
 
 on:
-  workflow_dispatch:  # Manual trigger; change to `push` or `schedule` if needed
+  push:
+    branches: [main]
 
 jobs:
   build-dataset:
@@ -42,6 +43,7 @@ jobs:
           path: release/
 
       - name: Create GitHub Release (optional)
+        if: github.ref == 'refs/heads/main'
         uses: softprops/action-gh-release@v2
         with:
           name: "Aggregated Dataset - ${{ github.run_number }}"
