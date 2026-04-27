@@ -19,6 +19,10 @@ _csv: &csv
       layer: raw
 
 # dvf data for each year
+raw-dvf-2025:
+  <<: *csv
+  filepath: data/01_raw/data.gouv.fr/valeursfoncieres-2025.txt.zip
+
 raw-dvf-2024:
   <<: *csv
   filepath: data/01_raw/data.gouv.fr/valeursfoncieres-2024.txt.zip
