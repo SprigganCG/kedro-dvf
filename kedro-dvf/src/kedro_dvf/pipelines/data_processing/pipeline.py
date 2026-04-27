@@ -9,6 +9,25 @@ from .nodes import import_raw_data,reduce_dimensions,filter_entries,stack_dvf,ag
 
 def create_pipeline(**kwargs) -> Pipeline:
     return pipeline([
+        # manage 2025
+        node(
+            func=import_raw_data,
+            inputs="raw-dvf-2025",
+            outputs="int-imported-dvf.2025",
+            name="import_raw_data_2025",
+        ),
+        node(
+            func=reduce_dimensions,
+            inputs="int-imported-dvf.2025",
+            outputs="int-reduced-dvf.2025",
+            name="reduce_dimensions_2025",
+        ),
+        node(
+            func=filter_entries,
+            inputs="int-reduced-dvf.2025",
+            outputs="int-filtered-dvf.2025",
+            name="filter_entries_2025",
+        ),
         # manage 2024
         node(
             func=import_raw_data,
@@ -107,7 +126,8 @@ def create_pipeline(**kwargs) -> Pipeline:
         # stack all the years
         node(
             func=stack_dvf,
-            inputs=["int-filtered-dvf.2024",
+            inputs=["int-filtered-dvf.2025",
+                    "int-filtered-dvf.2024",
                     "int-filtered-dvf.2023",
                     "int-filtered-dvf.2022",
                     "int-filtered-dvf.2021",
