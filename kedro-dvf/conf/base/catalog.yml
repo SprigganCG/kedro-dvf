@@ -21,23 +21,23 @@ _csv: &csv
 # dvf data for each year
 raw-dvf-2024:
   <<: *csv
-  filepath: https://www.data.gouv.fr/fr/datasets/r/5ffa8553-0e8f-4622-add9-5c0b593ca1f8
+  filepath: data/01_raw/data.gouv.fr/valeursfoncieres-2024.txt.zip
 
 raw-dvf-2023:
   <<: *csv
-  filepath: https://www.data.gouv.fr/fr/datasets/r/bc213c7c-c4d4-4385-bf1f-719573d39e90
+  filepath: data/01_raw/data.gouv.fr/valeursfoncieres-2023.txt.zip
 
 raw-dvf-2022:
   <<: *csv
-  filepath: https://www.data.gouv.fr/fr/datasets/r/b4f43708-c5a8-4f30-80dc-7adfa1265d74
+  filepath: data/01_raw/data.gouv.fr/valeursfoncieres-2022.txt.zip
 
 raw-dvf-2021:
   <<: *csv
-  filepath: https://www.data.gouv.fr/fr/datasets/r/3942b268-04e7-4202-b96d-93b9ef6254d6
+  filepath: data/01_raw/data.gouv.fr/valeursfoncieres-2021.txt.zip
 
 raw-dvf-2020:
   <<: *csv
-  filepath: https://www.data.gouv.fr/fr/datasets/r/0d16005c-f68e-487c-811b-0deddba0c3f1
+  filepath: data/01_raw/data.gouv.fr/valeursfoncieres-2020.txt.zip
 
 
 # intermediate series of datasets

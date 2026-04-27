@@ -21,6 +21,8 @@ From terminal
 git clone https://github.com/SprigganCG/kedro-dvf.git
 ```
 
+- Install/use python 3.11
+
 - Setup a virtualenv inside the repository and activate it
 ```
 python -m venv .venv
