@@ -4,52 +4,41 @@ on:
   push:
     branches: [main]
 
+permissions:
+  contents: write
+
 jobs:
   build-dataset:
     runs-on: ubuntu-latest
-
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v3
+      - uses: actions/checkout@v3
 
-      - name: Set up Python
-        uses: actions/setup-python@v4
+      - uses: actions/setup-python@v4
         with:
           python-version: '3.10'
 
-      - name: Install dependencies and Kedro
-        run: |
+      - run: |
           cd kedro-dvf
           python -m venv .venv
           source .venv/bin/activate
-          pip install --upgrade pip
           pip install -r requirements.txt
 
-      - name: Run Kedro pipeline
-        run: |
+      - run: |
           cd kedro-dvf
           source .venv/bin/activate
           kedro run
 
-      - name: Copy dataset files to a release folder
-        run: |
+      - run: |
           mkdir -p release
           cp kedro-dvf/data/02_intermediate/05_aggregated/int-aggregated-*-dvf.parquet release/
 
-      - name: Upload as artifact
-        uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v4
         with:
           name: dvf-aggregated-datasets
           path: release/
 
-      - name: Create GitHub Release
-        if: github.ref == 'refs/heads/main'
-        uses: softprops/action-gh-release@v2
+      - uses: softprops/action-gh-release@v2
         with:
           name: "Aggregated Dataset - ${{ github.run_number }}"
           tag_name: "dvf-data-${{ github.run_number }}"
-          files: |
-            release/int-aggregated-houses-dvf.parquet
-            release/int-aggregated-flats-dvf.parquet
-        env:
-          GITHUB_TOKEN: ${{ secrets.GH_PAT }}
+          files: release/*.parquet
