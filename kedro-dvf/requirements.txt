@@ -5,3 +5,4 @@ notebook
 kedro-datasets[pandas]
 aiohttp
 visidata
+kedro-viz==11.1.0
