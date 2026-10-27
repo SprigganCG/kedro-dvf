@@ -17,7 +17,7 @@ def create_pipeline(**kwargs) -> Pipeline:
     # Load years from parameters
     loader = OmegaConfigLoader(conf_source=settings.CONF_SOURCE)
     params = loader["parameters"]
-    years = params.get("years", [2020, 2021, 2022, 2023, 2024, 2025])
+    years = params.get("years", [2020, 2021, 2022, 2023, 2024, 2025, 2026])
     
     # Generate nodes for each year
     all_nodes = []
